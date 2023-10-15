@@ -5,22 +5,26 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/configuration-reference/#executor-job
+  build:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/configuration-reference/#steps
+      - image: cimg/rust:1.50.0
+
+    working_directory: /tmp
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - run: cargo --versiob
+      - run: 
+          name: Run Tests
+          command: "cargo test"
+      - run: mkdir -p /tmp/artifacts
+      - run: rustup target add x86_64-pc-windows-gnu
+      - run: 
+          name: Build Artifacts
+          command: "cargo build --target-dir /tmp/artifacts/ --target x86_64-pc-windows-gnu && cargo build --target-dir /tmp/artifacts/"
+      - store_artifacts:
+          path: /tmp/artifacts
 
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  build-and-store:
     jobs:
-      - say-hello
+      - build
