@@ -12,7 +12,7 @@ jobs:
     working_directory: /tmp/repo
     steps:
       - checkout
-      - run: cargo --versiob
+      - run: cargo --version
       - run: 
           name: Run Tests
           command: "cargo test"
