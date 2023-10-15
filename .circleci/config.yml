@@ -9,7 +9,7 @@ jobs:
     docker:
       - image: cimg/rust:1.50.0
 
-    working_directory: /tmp/
+    working_directory: /tmp/repo
     steps:
       - checkout
       - run: cargo --versiob
