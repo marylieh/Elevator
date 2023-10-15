@@ -4,10 +4,13 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
+
+orbs:
+  win: circleci/windows@5.0
+
 jobs:
   build:
-    docker:
-      - image: cimg/rust:1.73.0
+    executor: win/default
 
     working_directory: /tmp/repo
     steps:
@@ -17,10 +20,9 @@ jobs:
           name: Run Tests
           command: "cargo test"
       - run: mkdir -p /tmp/artifacts
-      - run: rustup target add x86_64-pc-windows-gnu
       - run: 
           name: Build Artifacts
-          command: "cargo build --target-dir /tmp/artifacts/ --target x86_64-pc-windows-gnu && cargo build --target-dir /tmp/artifacts/"
+          command: "cargo build --target-dir /tmp/artifacts/"
       - store_artifacts:
           path: /tmp/artifacts
 
